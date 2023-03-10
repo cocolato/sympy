@@ -976,12 +976,11 @@ class LatexPrinter(Printer):
                     name = r"\%s^{-1}" % func
                 else:
                     name = r"\operatorname{%s}^{-1}" % func
-            elif exp is not None:
-                func_tex = self._hprint_Function(func)
-                func_tex = self.parenthesize_super(func_tex)
-                name = r'%s^{%s}' % (func_tex, exp)
             else:
                 name = self._hprint_Function(func)
+            
+            if exp is not None:
+                name = self.parenthesize_super(name)
 
             if can_fold_brackets:
                 if func in accepted_latex_functions:
@@ -993,7 +992,7 @@ class LatexPrinter(Printer):
             else:
                 name += r"{\left(%s \right)}"
 
-            if inv_trig_power_case and exp is not None:
+            if exp is not None:
                 name += r"^{%s}" % exp
 
             return name % ",".join(args)

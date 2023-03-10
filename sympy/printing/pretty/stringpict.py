@@ -489,29 +489,17 @@ class prettyForm(stringPict):
         """Make a pretty power.
         """
         a = self
-        use_inline_func_form = False
         if b.binding == prettyForm.POW:
             b = stringPict(*b.parens())
         if a.binding > prettyForm.FUNC:
             a = stringPict(*a.parens())
-        elif a.binding == prettyForm.FUNC:
-            # heuristic for when to use inline power
-            if b.height() > 1:
-                a = stringPict(*a.parens())
-            else:
-                use_inline_func_form = True
+        elif a.binding == prettyForm.FUNC and b.height() > 1:
+            a = stringPict(*a.parens())
 
-        if use_inline_func_form:
-            #         2
-            #  sin  +   + (x)
-            b.baseline = a.prettyFunc.baseline + b.height()
-            func = stringPict(*a.prettyFunc.right(b))
-            return prettyForm(*func.right(a.prettyArgs))
-        else:
-            #      2    <-- top
-            # (x+y)     <-- bot
-            top = stringPict(*b.left(' '*a.width()))
-            bot = stringPict(*a.right(' '*b.width()))
+        #      2    <-- top
+        # (x+y)     <-- bot
+        top = stringPict(*b.left(' '*a.width()))
+        bot = stringPict(*a.right(' '*b.width()))
 
         return prettyForm(binding=prettyForm.POW, *bot.above(top))
 
